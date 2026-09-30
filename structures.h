@@ -69,4 +69,31 @@ typedef struct {
     uint16_t bg_pad;
     uint8_t  bg_reserved[12];
 } ext2_bgd_t;
+
+typedef struct {
+    uint16_t i_mode;
+    uint16_t i_uid;
+    uint32_t i_size;
+    uint32_t i_atime;
+    uint32_t i_ctime;
+    uint32_t i_mtime;
+    uint32_t i_dtime;
+    uint16_t i_gid;
+    uint16_t i_links_count;
+    uint32_t i_blocks;
+    uint32_t i_flags;
+    uint32_t i_osd1;
+    uint32_t i_block[15];
+    uint32_t i_generation;
+    uint32_t i_file_acl;
+    uint32_t i_dir_acl;
+    uint32_t i_faddr;
+    // osd2 structure for linux (12 bytes)
+    uint8_t  l_i_frag;
+    uint8_t  l_i_fsize;
+    uint16_t l_i_reserved1;
+    uint16_t l_i_uid_high;
+    uint16_t l_i_gid_high;
+    uint32_t l_i_reserved2;
+} ext2_inode_t;
 #endif //WEC_SYSTEMS_OS_STRUCTURES_H
