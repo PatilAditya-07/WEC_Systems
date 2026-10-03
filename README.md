@@ -13,3 +13,9 @@ Task 1:
 -> also skipped reversing endianness, opening file in binary mode to read, etc. because not required / redundant on macOS
 
 -> (will add screenshots of outputs with rest of the tasks at the end?)
+
+Task 2:
+-> approach: first simply just figured out how the important fields in the inode structure, printed them. was confused between the various terminologies.
+
+
+

@@ -52,22 +52,24 @@ ext2_inode_t read_inode(FILE* fp, ext2_superblock_t *sb, ext2_bgd_t *bgd, uint32
     return inode;
 }
 
-void print_inode(ext2_inode_t *inode, uint32_t inode_num) {
-    printf("    Inode %u:  \n", inode_num);
-    printf("Mode: 0x%04X (%s)\n", inode->i_mode, (inode->i_mode & 0xF000) == 0x4000 ? "directory" :
-           (inode->i_mode & 0xF000) == 0x8000 ? "regular file" : "other");
-    printf("Size: %u bytes\n", inode->i_size);
-    printf("Links count: %u\n", inode->i_links_count);
-    printf("Direct blocks: ");
-    for (int i = 0; i < 12; i++) printf("%u ", inode->i_block[i]);
-    printf("\n");
-    printf("Singly indirect: %u\n", inode->i_block[12]);
-    printf("Doubly indirect: %u\n", inode->i_block[13]);
-    printf("Triply indirect: %u\n", inode->i_block[14]);
-    printf("\n");
-}
+// void print_inode(ext2_inode_t *inode, uint32_t inode_num) {
+//     printf("    Inode %u:  \n", inode_num);
+//     printf("Mode: 0x%04X (%s)\n", inode->i_mode, (inode->i_mode & 0xF000) == 0x4000 ? "directory" :
+//            (inode->i_mode & 0xF000) == 0x8000 ? "regular file" : "other");
+//     printf("Size: %u bytes\n", inode->i_size);
+//     printf("Links count: %u\n", inode->i_links_count);
+//     printf("Direct blocks: ");
+//     for (int i = 0; i < 12; i++) printf("%u ", inode->i_block[i]);
+//     printf("\n");
+//     printf("Singly indirect: %u\n", inode->i_block[12]);
+//     printf("Doubly indirect: %u\n", inode->i_block[13]);
+//     printf("Triply indirect: %u\n", inode->i_block[14]);
+//     printf("\n");
+// }
 
-void read_direct_block(FILE* fp, ext2_inode_t *inode, ext2_superblock_t *sb) {
+void traverse_directory(FILE* fp, uint32_t inode_num, ext2_superblock_t *sb, ext2_bgd_t *bgd, uint32_t depth);
+
+void read_direct_block(FILE* fp, ext2_inode_t *inode, ext2_superblock_t *sb, ext2_bgd_t *bgd, uint32_t depth) {
     uint32_t block_size = 1024 << sb->s_log_block_size;
     for (int i = 0; i < 12; i++) {
         uint32_t block_num = inode->i_block[i];
@@ -85,14 +87,35 @@ void read_direct_block(FILE* fp, ext2_inode_t *inode, ext2_superblock_t *sb) {
         while (offset < block_size) {
             ext2_dir_entry_t *dir = (ext2_dir_entry_t *)(buffer + offset);
             if (dir->rec_len == 0 || (offset + dir->rec_len) > block_size) break;
-            if (dir->inode != 0) {
-                printf("Inode: %u\n", dir->inode);
-                printf("File name: %.*s\n", dir->name_len, dir->name);
-                printf("Record length: %u\n", dir->rec_len);
-                printf("\n");
+            if (dir->inode != 0) { // skip inode = 0
+                //printf("Inode: %u\n", dir->inode);
+                char filename[dir->name_len + 1];
+                memcpy(filename, dir->name, dir->name_len);
+                filename[dir->name_len] = '\0';
+                if (strcmp(filename, ".") == 0 || strcmp(filename, "..") == 0) {
+                    offset += dir->rec_len;
+                    continue; // skip '.' and '..'
+                }
+                for (uint32_t j = 0; j < depth; j++) {
+                    printf("│   ");
+                }
+                if (dir->file_type == 2) {
+                    printf("├──  %s/\n", filename);
+                    traverse_directory(fp, dir->inode, sb, bgd, depth + 1);
+                }
+                else {
+                    printf("├──  %s\n", filename);
+                }
             }
             offset += dir->rec_len;
         }
+    }
+}
+
+void traverse_directory(FILE* fp, uint32_t inode_num, ext2_superblock_t *sb, ext2_bgd_t *bgd, uint32_t depth) {
+    ext2_inode_t inode = read_inode(fp, sb, bgd, inode_num);
+    if ((inode.i_mode & 0xF000) == 0x4000) { // check if directory
+        read_direct_block(fp, &inode, sb, bgd, depth);
     }
 }
 
@@ -147,12 +170,13 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    ext2_inode_t root_inode = read_inode(fp, &sb, bgd, 2); // '/' has inode 2
-    print_inode(&root_inode, 2);
+    //ext2_inode_t root_inode = read_inode(fp, &sb, bgd, 2); // '/' has inode 2
+    //print_inode(&root_inode, 2);
 
-    read_direct_block(fp, &root_inode, &sb);
+    //read_direct_block(fp, &root_inode, &sb, bgd);
+    traverse_directory(fp, 2, &sb, bgd, 1);
 
-    for (int i = 0; i < group_count; i++) {
-        print_bgd(bgd, i);
-    }
+    // for (int i = 0; i < group_count; i++) {
+    //     print_bgd(bgd, i);
+    // }
 }
