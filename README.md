@@ -25,6 +25,8 @@ Task 2:
 
 -> during traversal, inode value in the entry and file type are directly available, but dir->name isn't actually a null terminated string. so was using that to print name, was getting some garbage values and was printing current and parent directory ('.' and '..' which i intended to skip, so strcmp was failing). 
 
+-> checked via e2fsprogs/debugfs, 12 direct pointers are sufficient for the entire directory traversal, so that's why i'm NOT implementing singly, doubly, triply indirect block checking. 
+
 -> can see some files like lost+found, readthis.txt, comp-dsa.pdf, rice.webp, vid.webm. Excited to see what content they hold :D
 
 
