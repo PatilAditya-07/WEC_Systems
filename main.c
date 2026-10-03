@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "structures.h"
 
@@ -66,6 +67,35 @@ void print_inode(ext2_inode_t *inode, uint32_t inode_num) {
     printf("\n");
 }
 
+void read_direct_block(FILE* fp, ext2_inode_t *inode, ext2_superblock_t *sb) {
+    uint32_t block_size = 1024 << sb->s_log_block_size;
+    for (int i = 0; i < 12; i++) {
+        uint32_t block_num = inode->i_block[i];
+        if (block_num == 0) continue; // no entry
+        uint8_t buffer[block_size];
+        if (fseek(fp, block_num * block_size, SEEK_SET) != 0) {
+            fprintf(stderr, "File seek error\n");
+            exit(1);
+        }
+        if (fread(buffer, block_size, 1, fp) != 1) {
+            fprintf(stderr, "File read error\n");
+            exit(1);
+        }
+        uint32_t offset = 0;
+        while (offset < block_size) {
+            ext2_dir_entry_t *dir = (ext2_dir_entry_t *)(buffer + offset);
+            if (dir->rec_len == 0 || (offset + dir->rec_len) > block_size) break;
+            if (dir->inode != 0) {
+                printf("Inode: %u\n", dir->inode);
+                printf("File name: %.*s\n", dir->name_len, dir->name);
+                printf("Record length: %u\n", dir->rec_len);
+                printf("\n");
+            }
+            offset += dir->rec_len;
+        }
+    }
+}
+
 int main(int argc, char *argv[]) {
     if (argc < 2) {
         fprintf(stderr, "Invalid args, usage: %s <.img>\n", argv[0]);
@@ -119,6 +149,8 @@ int main(int argc, char *argv[]) {
 
     ext2_inode_t root_inode = read_inode(fp, &sb, bgd, 2); // '/' has inode 2
     print_inode(&root_inode, 2);
+
+    read_direct_block(fp, &root_inode, &sb);
 
     for (int i = 0; i < group_count; i++) {
         print_bgd(bgd, i);

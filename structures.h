@@ -96,4 +96,14 @@ typedef struct {
     uint16_t l_i_gid_high;
     uint32_t l_i_reserved2;
 } ext2_inode_t;
+
+typedef struct {
+    uint32_t inode;
+    uint16_t rec_len; // len + pad
+    uint8_t name_len;
+    uint8_t file_type;
+    char name[]; // variable
+} ext2_dir_entry_t;
+
+
 #endif //WEC_SYSTEMS_OS_STRUCTURES_H
