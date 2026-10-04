@@ -23,11 +23,9 @@ Task 2:
 
 -> before actual directory traversal, confirmed understanding of the directory entry structure, specifically the rec_len part (variable length structures, so variable reads into a buffer) by printing the directory entries and verifying against xxd output. 
 
--> during traversal, inode value in the entry and file type are directly available, but dir->name isn't actually a null terminated string. so was using that to print name, was getting some garbage values and was printing current and parent directory ('.' and '..' which i intended to skip, so strcmp was failing). 
+-> during traversal, inode value in the entry and file type are directly available, but dir->name isn't actually a null terminated string. so was using that to print name, was getting some garbage values and was printing current and parent directory ('.' and '..' which i intended to skip, so strcmp was failing). currently only implemented direct block check. 
 
--> checked via e2fsprogs/debugfs, 12 direct pointers are sufficient for the entire directory traversal, so that's why i'm NOT implementing singly, doubly, triply indirect block checking. 
-
--> can see some files like lost+found, readthis.txt, comp-dsa.pdf, rice.webp, vid.webm. Excited to see what content they hold :D
+-> can see some files like lost+found, readthis.txt, comp-dsa.pdf, rice.webp, vid.webm; printed their inode structure (of regular files), and saw that comp-dsa.pdf, vid.webm, rice.webp use singly and even doubly indirect pointers. so have to implement that now. Excited to see what content they hold :D
 
 
 
