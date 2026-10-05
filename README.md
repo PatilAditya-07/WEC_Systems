@@ -50,4 +50,10 @@
 -> i deliberately left the task incomplete rather than submitting code which i could not explain or verify. the first three tasks are implemented and tested, including recursive directory traversal and reading files through direct, singly indirect and doubly indirect block pointers.
 
 ## AI disclosure: AI was used during the project for conceptual clarification, debugging, and implementation guidance. i did not treat generated code as verified code; the parts of task 4 which i could not understand completely were not presented as finished functionality.
+<img width="1389" height="439" alt="task3_verification" src="https://github.com/user-attachments/assets/361d1528-8510-4a82-96ac-386eea249cb8" />
+<img width="1011" height="701" alt="task1" src="https://github.com/user-attachments/assets/58e16a11-ef67-4011-8c9b-b497d21f2b63" />
+<img width="998" height="609" alt="root_inode" src="https://github.com/user-attachments/assets/7e0c37d7-228d-49c2-b5d5-454225d3bc2f" />
+<img width="1063" height="108" alt="readthis" src="https://github.com/user-attachments/assets/5df88c65-6e00-471a-ba98-1526e7f8e87d" />
+<img width="1195" height="815" alt="file_inode_content" src="https://github.com/user-attachments/assets/8f7cd1eb-7cf8-4e7b-ac24-db59cb067b5d" />
+<img width="1160" height="781" alt="directory_traversal" src="https://github.com/user-attachments/assets/46b0a3aa-d90e-4a9f-83f2-5cc99931bf52" />
 
