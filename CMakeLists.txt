@@ -8,4 +8,8 @@ add_compile_options(-Wall -Wextra -Wpedantic)
 
 add_executable(WEC_Systems_OS main.c
         structures.h
+        sb_bgdt.c
+        sb_bgdt.h
+        directory.c
+        directory.h
 )
