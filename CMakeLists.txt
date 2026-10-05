@@ -14,4 +14,6 @@ add_executable(WEC_Systems_OS main.c
         directory.h
         read_file.c
         read_file.h
+        read_write.c
+        read_write.h
 )

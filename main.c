@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    FILE *fp = fopen(argv[1], "rb");
+    FILE *fp = fopen(argv[1], "r+b"); // r, open
     if (!fp) {
         perror("Failed to open disk image");
         return 1;
