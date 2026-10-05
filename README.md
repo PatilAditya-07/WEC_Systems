@@ -41,5 +41,13 @@
 
 -> cleaned up the main function to only read the file image, take inputs including cli options to do any one of the task without having to remove or comment out them (which looked messy). used AI to add in cli options and clean up the code as i had no idea how it worked but wanted a way to execute any of the executed tasks and not just one of them. 
 
+## Task 4:
 
+-> here, realized pretty quickly that it was heavy as updating anything would mean updating the entire structure while not breaking anything. the idea (from AI) was that given an inode to update, you have to check if there's sufficient space to update it, if not, allocate more space; if less is required, deallocation. that changes bitmap of each bg, number of free blocks/inodes, etc.
+
+-> a free block can be figured out by seeing which bit in the bitmap is not set, so for allocation (only did that), set it, update meatdata, write to a fresh block. 
+
+-> i deliberately left the task incomplete rather than submitting code which i could not explain or verify. the first three tasks are implemented and tested, including recursive directory traversal and reading files through direct, singly indirect and doubly indirect block pointers.
+
+## AI disclosure: AI was used during the project for conceptual clarification, debugging, and implementation guidance. i did not treat generated code as verified code; the parts of task 4 which i could not understand completely were not presented as finished functionality.
 
