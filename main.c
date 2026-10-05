@@ -5,6 +5,7 @@
 #include "structures.h"
 #include "sb_bgdt.h"
 #include "directory.h"
+#include "read_file.h"
 
 int main(int argc, char *argv[]) {
     if (argc < 3) {
@@ -55,18 +56,37 @@ int main(int argc, char *argv[]) {
     }
 
     int opt;
-    while ((opt = getopt(argc - 1, argv + 1, "123:4:")) != -1) {
+    optind = 2;
+    while ((opt = getopt(argc, argv, "123:4:")) != -1) {
         switch (opt) {
-            case '1': // Task 1
+            case '1': // task 1
                 print_superblock(&sb, block_size);
                 for (uint32_t i = 0; i < group_count; i++) {
                     print_bgd(bgd, i);
                 }
                 break;
-            case '2': // Task 2
+
+            case '2': // task 2
                 printf("/\n");
                 traverse_directory(fp, 2, &sb, bgd, 0);
                 break;
+
+            case '3': { // task 3
+                if (!optarg) {
+                    fprintf(stderr, "Option -3 requires an inode number\n");
+                    break;
+                }
+                uint32_t inode_num = atoi(optarg); // printing contents of file, given it's inode
+                ext2_inode_t inode = read_inode(fp, &sb, bgd, inode_num);
+
+                if ((inode.i_mode & 0xF000) != 0x8000) {
+                    fprintf(stderr, "Not a regular file \n");
+                    break;
+                }
+                read_file(fp, &inode, &sb, stdout);
+                break;
+            }
+
             default:
                 fprintf(stderr, "Invalid option\n");
                 break;

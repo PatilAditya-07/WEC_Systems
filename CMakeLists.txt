@@ -12,4 +12,6 @@ add_executable(WEC_Systems_OS main.c
         sb_bgdt.h
         directory.c
         directory.h
+        read_file.c
+        read_file.h
 )
