@@ -25,7 +25,11 @@ Task 2:
 
 -> during traversal, inode value in the entry and file type are directly available, but dir->name isn't actually a null terminated string. so was using that to print name, was getting some garbage values and was printing current and parent directory ('.' and '..' which i intended to skip, so strcmp was failing). currently only implemented direct block check. 
 
--> can see some files like lost+found, readthis.txt, comp-dsa.pdf, rice.webp, vid.webm; printed their inode structure (of regular files), and saw that comp-dsa.pdf, vid.webm, rice.webp use singly and even doubly indirect pointers. so have to implement that now. Excited to see what content they hold :D
+-> can see some files like lost+found, readthis.txt, comp-dsa.pdf, rice.webp, vid.webm; printed their inode structure (of regular files), and saw that comp-dsa.pdf, vid.webm, rice.webp use singly and even doubly indirect pointers. 
+
+-> for the indirect pointers, i didn't know how to dereference say doubly to singly indirect then direct, then (used AI) got to know that recursively making every doubly indirect block to singly, then dereferencing to direct blocks, using a "levels_left" parameter, which indicates what level of indirection is actually happening. although not required (calculated required number of blocks manually and verified by printing i_size, the largest files like the pdf and webp also didn't require more than doubly indirect pointers), i wrote code for triple indirection as well as the only change is in the levels_left argument. also had to check how many blocks are actually required to read, because it's not necessary that a file use all of the 256 (1024/4) blocks/pointers to blocks. 
+
+
 
 
 
