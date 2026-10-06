@@ -1,4 +1,4 @@
-# WEC_Systems OS tasks, Aditya Patil
+# WEC Systems - ext2 fs parser
 
 ## Task 1: 
 -> approach: https://www.nongnu.org/ext2-doc/ext2.pdf used this pdf for the entire internal layout of the ext2 structure. broadly understood the different fields (not all of them) and why they're required. 
